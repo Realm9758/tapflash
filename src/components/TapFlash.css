@@ -154,7 +154,6 @@
 }
 .tf-area--dim {
   opacity: 0.3;
-  pointer-events: none;
 }
 
 /* ── Overlay ── */
