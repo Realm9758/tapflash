@@ -129,19 +129,20 @@ export default function TapFlash() {
   }, [clearTimers, spawnShape]);
 
   const handleAreaClick = useCallback(() => {
-    if (gameState === "waiting") {
-      // Clicked before shape appeared
-      clearTimers();
-      playSound("early");
-      setEarlyWarning(true);
-      setTimeout(() => {
-        setEarlyWarning(false);
-        setGameState("waiting");
-        spawnShape(score);
-      }, 1000);
-      return;
-    }
+    if (gameState !== "waiting") return;
+    // Clicked background before shape appeared
+    clearTimers();
+    playSound("early");
+    setEarlyWarning(true);
+    setTimeout(() => {
+      setEarlyWarning(false);
+      setGameState("waiting");
+      spawnShape(score);
+    }, 1000);
+  }, [gameState, clearTimers, score, spawnShape]);
 
+  const handleShapeClick = useCallback((e) => {
+    e.stopPropagation();
     if (gameState !== "active") return;
 
     clearTimers();
@@ -235,6 +236,7 @@ export default function TapFlash() {
             <div
               key={animKey}
               className="tf-shape"
+              onClick={handleShapeClick}
               style={{
                 left: position.x,
                 top: position.y,
