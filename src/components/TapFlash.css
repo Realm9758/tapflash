@@ -1,9 +1,9 @@
-/* ── Root & Background ── */
+/* ── Reset / Root ─────────────────────────────────────────────────────────── */
 .tf-root {
   min-height: 100vh;
   background:
     radial-gradient(ellipse 80% 55% at 50% -5%, rgba(124, 106, 244, 0.22) 0%, transparent 68%),
-    radial-gradient(ellipse 50% 35% at 85% 105%, rgba(72, 219, 251, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 35% at 85% 105%, rgba(72, 219, 251, 0.10) 0%, transparent 55%),
     #0c0b18;
   color: #e8e8f0;
   display: flex;
@@ -12,19 +12,19 @@
   user-select: none;
 }
 
-/* ── Header ── */
+/* ── Header ───────────────────────────────────────────────────────────────── */
 .tf-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 28px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 26px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
   position: relative;
   z-index: 20;
 }
 
 .tf-logo {
-  font-size: 1.45rem;
+  font-size: 1.4rem;
   font-weight: 900;
   letter-spacing: -0.5px;
   margin: 0;
@@ -38,22 +38,37 @@
   transform: translateX(-50%);
 }
 
-/* ── Level Badge ── */
+.tf-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ── Lives ────────────────────────────────────────────────────────────────── */
+.tf-lives {
+  display: flex;
+  gap: 4px;
+  font-size: 1.1rem;
+}
+.tf-heart--alive { filter: drop-shadow(0 0 4px rgba(255,80,80,0.6)); }
+.tf-heart--lost  { opacity: 0.3; filter: grayscale(1); }
+
+/* ── Level Badge ──────────────────────────────────────────────────────────── */
 .tf-level-badge {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(124, 106, 244, 0.15);
-  border: 1px solid rgba(124, 106, 244, 0.4);
+  background: rgba(124,106,244,0.15);
+  border: 1px solid rgba(124,106,244,0.4);
   border-radius: 10px;
   padding: 4px 14px;
   animation: fadeIn 0.2s ease;
 }
 .tf-level-label {
-  font-size: 0.55rem;
+  font-size: 0.52rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
-  color: rgba(168, 156, 248, 0.8);
+  letter-spacing: 0.14em;
+  color: rgba(168,156,248,0.8);
   text-transform: uppercase;
   line-height: 1;
 }
@@ -64,68 +79,154 @@
   line-height: 1.1;
 }
 
-/* ── Score display ── */
-.tf-scores {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.tf-score-divider {
-  width: 1px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.12);
-}
-.tf-score-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-  min-width: 42px;
-}
-.tf-score-label {
-  font-size: 0.6rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.45);
-}
-.tf-score-val {
-  font-size: 1.55rem;
-  font-weight: 900;
-  color: #fff;
-  line-height: 1;
-}
+/* ── Scores ───────────────────────────────────────────────────────────────── */
+.tf-scores { display: flex; align-items: center; gap: 12px; }
+.tf-score-divider { width: 1px; height: 26px; background: rgba(255,255,255,0.1); }
+.tf-score-box { display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 40px; }
+.tf-score-label { font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); }
+.tf-score-val   { font-size: 1.5rem;  font-weight: 900; color: #fff; line-height: 1; }
 
-/* ── Main layout ── */
+/* ── Main ─────────────────────────────────────────────────────────────────── */
 .tf-main {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 28px 20px;
+  gap: 14px;
+  padding: 24px 20px;
 }
 
-/* ── Level-up toast ── */
+/* ── Mode Selection ───────────────────────────────────────────────────────── */
+.tf-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 560px;
+}
+.tf-menu-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.35);
+  margin: 0;
+}
+.tf-mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+.tf-mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+  text-align: center;
+}
+.tf-mode-card:hover {
+  background: rgba(124,106,244,0.08);
+  border-color: rgba(124,106,244,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(124,106,244,0.15);
+}
+.tf-mode-card--active {
+  background: rgba(124,106,244,0.14);
+  border-color: rgba(124,106,244,0.55);
+  box-shadow: 0 0 0 3px rgba(124,106,244,0.12);
+}
+.tf-mode-icon { font-size: 1.8rem; }
+.tf-mode-name { font-size: 1rem; font-weight: 800; color: #fff; }
+.tf-mode-desc { font-size: 0.75rem; color: rgba(255,255,255,0.4); line-height: 1.4; }
+
+/* ── Play area ────────────────────────────────────────────────────────────── */
+.tf-area {
+  position: relative;
+  width: min(620px, 94vw);
+  height: min(460px, 52vh);
+  background: rgba(22,20,40,1);
+  border: 1px solid rgba(124,106,244,0.2);
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: crosshair;
+  transition: box-shadow 0.4s;
+  box-shadow:
+    0 0 0 1px rgba(124,106,244,0.1),
+    0 12px 48px rgba(0,0,0,0.6),
+    0 0 80px rgba(124,106,244,0.10);
+}
+.tf-area--hot {
+  box-shadow:
+    0 0 0 2px rgba(255,160,0,0.25),
+    0 12px 48px rgba(0,0,0,0.6),
+    0 0 60px rgba(255,160,0,0.12);
+  border-color: rgba(255,160,0,0.25);
+}
+.tf-area--blazing {
+  animation: areaPulse 0.8s ease-in-out infinite alternate;
+  box-shadow:
+    0 0 0 2px rgba(255,100,0,0.4),
+    0 12px 48px rgba(0,0,0,0.6),
+    0 0 80px rgba(255,100,0,0.2);
+  border-color: rgba(255,100,0,0.4);
+}
+@keyframes areaPulse {
+  from { box-shadow: 0 0 0 2px rgba(255,100,0,0.3), 0 12px 48px rgba(0,0,0,0.6), 0 0 60px rgba(255,100,0,0.15); }
+  to   { box-shadow: 0 0 0 3px rgba(255,100,0,0.5), 0 12px 48px rgba(0,0,0,0.6), 0 0 100px rgba(255,100,0,0.3); }
+}
+
+/* ── Streak badge ─────────────────────────────────────────────────────────── */
+.tf-streak {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50px;
+  padding: 5px 16px;
+  letter-spacing: 0.02em;
+  animation: fadeIn 0.2s ease;
+}
+.tf-streak--hot {
+  color: #FFB74D;
+  background: rgba(255,183,77,0.1);
+  border-color: rgba(255,183,77,0.3);
+}
+.tf-streak--blazing {
+  color: #FF7043;
+  background: rgba(255,112,67,0.12);
+  border-color: rgba(255,112,67,0.4);
+  animation: streakPulse 0.6s ease-in-out infinite alternate;
+}
+@keyframes streakPulse {
+  from { box-shadow: 0 0 8px rgba(255,112,67,0.2); }
+  to   { box-shadow: 0 0 18px rgba(255,112,67,0.5); }
+}
+
+/* ── Level-up toast ───────────────────────────────────────────────────────── */
 .tf-levelup-toast {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 9px 20px;
-  background: rgba(124, 106, 244, 0.18);
-  border: 1px solid rgba(124, 106, 244, 0.5);
+  background: rgba(124,106,244,0.18);
+  border: 1px solid rgba(124,106,244,0.5);
   border-radius: 50px;
   font-size: 0.9rem;
   font-weight: 700;
   color: #c4b8ff;
-  letter-spacing: 0.02em;
-  animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-             toastOut 0.4s ease 1.8s forwards;
+  animation: toastIn 0.3s cubic-bezier(0.34,1.56,0.64,1), toastOut 0.4s ease 1.8s forwards;
   pointer-events: none;
 }
-.tf-levelup-icon { font-size: 1rem; }
-
 @keyframes toastIn {
   from { opacity: 0; transform: translateY(-10px) scale(0.9); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -134,68 +235,149 @@
   to { opacity: 0; transform: translateY(-6px); }
 }
 
-/* ── Play area ── */
-.tf-area {
-  position: relative;
-  width: min(620px, 94vw);
-  height: min(460px, 52vh);
-  background: rgba(22, 20, 40, 1);
-  border: 1px solid rgba(124, 106, 244, 0.2);
-  border-radius: 22px;
-  overflow: hidden;
-  cursor: crosshair;
-  transition: opacity 0.3s;
-  box-shadow:
-    0 0 0 1px rgba(124, 106, 244, 0.1),
-    0 12px 48px rgba(0, 0, 0, 0.6),
-    0 0 100px rgba(124, 106, 244, 0.12);
-}
-/* overlay covers the area completely — no opacity needed */
-
-/* ── Overlay ── */
-.tf-overlay {
+/* ── Feedback message (center of play area) ───────────────────────────────── */
+.tf-feedback {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+  animation: feedbackPop 0.15s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  z-index: 20;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+.tf-feedback--insane  { color: #CE93D8; }
+.tf-feedback--perfect { color: #81C784; }
+.tf-feedback--fast-rt { color: #4FC3F7; }
+.tf-feedback--fast    { color: #FFD600; }
+.tf-feedback--bonus   { color: #BF5FFF; }
+.tf-feedback--danger  { color: #FF3B3B; }
+.tf-feedback--miss    { color: rgba(255,255,255,0.45); font-size: 1.1rem; }
+.tf-feedback--ok      { color: rgba(255,255,255,0.55); font-size: 1rem; }
+
+@keyframes feedbackPop {
+  from { opacity: 0; transform: translate(-50%,-50%) scale(0.7); }
+  to   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+}
+
+/* ── Circles ──────────────────────────────────────────────────────────────── */
+.tf-shape {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation:
+    shapeIn  0.18s cubic-bezier(0.34,1.56,0.64,1) forwards,
+    shapeOut var(--visible-ms, 2000ms) linear forwards;
+  box-shadow:
+    0 0 24px var(--shape-color, #7c6af4),
+    0 0 60px color-mix(in srgb, var(--shape-color, #7c6af4) 28%, transparent);
+  will-change: transform, opacity;
+}
+.tf-shape:hover  { filter: brightness(1.12); }
+.tf-shape:active { transform: translate(-50%,-50%) scale(0.82); }
+
+/* Type-specific overrides */
+.tf-shape--bad {
+  border: 3px solid rgba(255,100,100,0.6);
+  animation:
+    shapeIn  0.18s cubic-bezier(0.34,1.56,0.64,1) forwards,
+    shapeOut var(--visible-ms, 2000ms) linear forwards,
+    badPulse 0.5s ease-in-out infinite alternate;
+}
+@keyframes badPulse {
+  from { box-shadow: 0 0 20px #FF3B3B, 0 0 50px rgba(255,59,59,0.3); }
+  to   { box-shadow: 0 0 35px #FF3B3B, 0 0 80px rgba(255,59,59,0.5); }
+}
+.tf-shape--bonus {
+  border: 2px solid rgba(200,150,255,0.5);
+}
+.tf-shape--fast {
+  border: 2px solid rgba(255,220,0,0.4);
+}
+
+.tf-shape-icon {
+  font-size: 1.4rem;
+  font-style: normal;
+  line-height: 1;
+  color: rgba(255,255,255,0.9);
+  font-weight: 900;
+  pointer-events: none;
+}
+
+@keyframes shapeIn {
+  from { transform: translate(-50%,-50%) scale(0.2); opacity: 0; }
+  to   { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
+}
+@keyframes shapeOut {
+  0%   { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── Warning ──────────────────────────────────────────────────────────────── */
+.tf-warning {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #FF6B6B;
+  animation: shake 0.45s ease;
+  pointer-events: none;
+  z-index: 15;
+}
+@keyframes shake {
+  0%,100% { transform: translate(-50%,-50%); }
+  20%  { transform: translate(calc(-50% - 7px),-50%); }
+  40%  { transform: translate(calc(-50% + 7px),-50%); }
+  60%  { transform: translate(calc(-50% - 4px),-50%); }
+  80%  { transform: translate(calc(-50% + 4px),-50%); }
+}
+
+/* ── Hint ─────────────────────────────────────────────────────────────────── */
+.tf-hint {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.25);
+  margin: 0;
+  letter-spacing: 0.04em;
+  height: 18px;
+  font-weight: 500;
+}
+
+/* ── Game over card ───────────────────────────────────────────────────────── */
+.tf-gameover-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 16px;
+  padding: 36px 32px;
   background: #1a1830;
-  border: 1px solid rgba(124, 106, 244, 0.18);
-  border-radius: 22px;
-  z-index: 10;
+  border: 1px solid rgba(124,106,244,0.2);
+  border-radius: 24px;
+  width: min(420px, 92vw);
+  box-shadow:
+    0 0 0 1px rgba(124,106,244,0.08),
+    0 20px 60px rgba(0,0,0,0.6),
+    0 0 80px rgba(124,106,244,0.08);
+  animation: fadeIn 0.25s ease;
 }
-.tf-overlay--fade { animation: fadeIn 0.2s ease; }
-
-.tf-idle-icon {
-  font-size: 2.8rem;
-  animation: pulse 2.5s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-}
-
-.tf-tagline {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.55);
-  margin: 0;
-  text-align: center;
-}
-
-/* ── Game over ── */
-.tf-gameover { gap: 14px; }
-
 .tf-go-title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255,255,255,0.45);
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
-
 .tf-final-score-wrap {
   display: flex;
   flex-direction: column;
@@ -208,7 +390,7 @@
   color: #fff;
   margin: 0;
   line-height: 1;
-  letter-spacing: -2px;
+  letter-spacing: -3px;
   background: linear-gradient(135deg, #fff 30%, #a89cf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -216,11 +398,11 @@
 }
 .tf-final-label {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(255,255,255,0.3);
 }
 .tf-new-hs {
   font-size: 0.68rem;
@@ -228,19 +410,18 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #feca57;
-  background: rgba(254, 202, 87, 0.14);
-  border: 1px solid rgba(254, 202, 87, 0.35);
+  background: rgba(254,202,87,0.14);
+  border: 1px solid rgba(254,202,87,0.35);
   border-radius: 50px;
   padding: 2px 10px;
 }
 
-/* ── Stats grid ── */
+/* ── Stats grid ───────────────────────────────────────────────────────────── */
 .tf-stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   width: 100%;
-  max-width: 280px;
 }
 .tf-stat-card {
   display: flex;
@@ -248,13 +429,13 @@
   align-items: center;
   gap: 3px;
   padding: 11px 12px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 12px;
 }
 .tf-stat-card--accent {
-  background: rgba(124, 106, 244, 0.12);
-  border-color: rgba(124, 106, 244, 0.3);
+  background: rgba(124,106,244,0.12);
+  border-color: rgba(124,106,244,0.28);
 }
 .tf-stat-val {
   font-size: 1.1rem;
@@ -264,17 +445,17 @@
 }
 .tf-stat-card--accent .tf-stat-val { color: #c4b8ff; }
 .tf-stat-label {
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255,255,255,0.4);
 }
 
-/* ── Game over actions ── */
+/* ── Game over actions ────────────────────────────────────────────────────── */
 .tf-go-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -282,135 +463,50 @@
   font-size: 0.82rem;
   color: #1DD1A1;
   margin: 0;
-  max-width: 260px;
   text-align: center;
   animation: fadeIn 0.2s ease;
 }
 
-/* ── Buttons ── */
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
 .tf-btn {
-  padding: 10px 28px;
+  padding: 10px 26px;
   border: none;
   border-radius: 50px;
   background: #7c6af4;
   color: #fff;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-  box-shadow: 0 4px 20px rgba(124, 106, 244, 0.4);
+  box-shadow: 0 4px 20px rgba(124,106,244,0.4);
   letter-spacing: 0.01em;
 }
 .tf-btn:hover {
   background: #9080f8;
   transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(124, 106, 244, 0.55);
+  box-shadow: 0 6px 28px rgba(124,106,244,0.55);
 }
-.tf-btn:active {
-  transform: translateY(0) scale(0.97);
-  box-shadow: 0 2px 12px rgba(124, 106, 244, 0.3);
+.tf-btn:active { transform: translateY(0) scale(0.97); }
+
+.tf-btn--large {
+  padding: 13px 40px;
+  font-size: 1.05rem;
 }
 
 .tf-btn--ghost {
   background: transparent;
-  border: 1.5px solid rgba(255, 255, 255, 0.18);
-  color: rgba(255, 255, 255, 0.65);
+  border: 1.5px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.6);
   box-shadow: none;
 }
 .tf-btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.28);
   color: #fff;
   box-shadow: none;
-  transform: translateY(-1px);
 }
 
-/* ── Shape ── */
-.tf-shape {
-  position: absolute;
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  animation:
-    shapeIn  0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
-    shapeOut var(--visible-ms, 2000ms) linear forwards;
-  box-shadow:
-    0 0 28px var(--shape-color, #7c6af4),
-    0 0 70px color-mix(in srgb, var(--shape-color, #7c6af4) 30%, transparent);
-  will-change: transform, opacity;
-}
-.tf-shape:hover {
-  filter: brightness(1.12);
-}
-.tf-shape:active {
-  transform: translate(-50%, -50%) scale(0.82);
-  transition: transform 0.07s ease;
-}
-
-@keyframes shapeIn {
-  from { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
-  to   { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
-}
-@keyframes shapeOut {
-  0%   { opacity: 1; }
-  70%  { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-/* ── Hint ── */
-.tf-hint {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.28);
-  margin: 0;
-  letter-spacing: 0.04em;
-  height: 18px;
-  font-weight: 500;
-}
-
-/* ── Reaction time badge ── */
-.tf-rt-badge {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 50px;
-  padding: 5px 14px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.75);
-  animation: fadeUp 0.2s ease forwards;
-  white-space: nowrap;
-  pointer-events: none;
-}
-.tf-rt-badge--perfect {
-  background: rgba(254, 202, 87, 0.12);
-  border-color: rgba(254, 202, 87, 0.45);
-  color: #feca57;
-}
-.tf-perfect-label {
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  margin-right: 5px;
-}
-
-/* ── Early warning ── */
-.tf-warning {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #FF6B6B;
-  animation: shake 0.45s ease;
-  pointer-events: none;
-}
-
-/* ── Keyframes ── */
+/* ── Keyframes ────────────────────────────────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -418,11 +514,4 @@
 @keyframes fadeUp {
   from { opacity: 0; transform: translateX(-50%) translateY(8px); }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-@keyframes shake {
-  0%, 100% { transform: translate(-50%, -50%); }
-  20%  { transform: translate(calc(-50% - 7px), -50%); }
-  40%  { transform: translate(calc(-50% + 7px), -50%); }
-  60%  { transform: translate(calc(-50% - 4px), -50%); }
-  80%  { transform: translate(calc(-50% + 4px), -50%); }
 }
