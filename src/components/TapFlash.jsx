@@ -20,11 +20,14 @@ function scoreToLevel(score) {
 }
 
 function getDifficulty(score) {
-  // Smooth exponential-ish curve: delay 2000→380ms, visible 2200→520ms
-  const t = Math.min(score / 40, 1); // saturates at score 40
-  const delay = Math.round(2000 - t * 1620);
-  const visible = Math.round(2200 - t * 1680);
-  return { delay: Math.max(delay, 380), visible: Math.max(visible, 520) };
+  // Level-based exponential decay — each level: delay ×0.82, visible ×0.85
+  // Level 1: 1500ms delay, 2000ms visible
+  // Level 5: ~680ms delay, ~1050ms visible
+  // Level 10: ~300ms delay (floor), ~480ms visible (floor)
+  const level = scoreToLevel(score);
+  const delay   = Math.max(300, Math.round(1500 * Math.pow(0.82, level - 1)));
+  const visible = Math.max(480, Math.round(2000 * Math.pow(0.85, level - 1)));
+  return { delay, visible };
 }
 
 function fmt(ms) {
@@ -110,41 +113,34 @@ function LevelUpToast({ message }) {
 }
 
 // ── Main Component ────────────────────────────────────────────
-export default function TapFlash() {
-  // Game state
+export default function Reactly() {
   const [gameState, setGameState] = useState("idle");
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(
-    () => parseInt(localStorage.getItem("tapflash_hs") || "0", 10)
+    () => parseInt(localStorage.getItem("reactly_hs") || "0", 10)
   );
 
-  // Shape
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [color, setColor] = useState(COLORS[0]);
   const [animKey, setAnimKey] = useState(0);
-  const [clickedKey, setClickedKey] = useState(null);
 
-  // Reaction stats
   const [reactionTimes, setReactionTimes] = useState([]);
   const [lastReaction, setLastReaction] = useState(null);
   const [isPerfect, setIsPerfect] = useState(false);
   const [bestRT, setBestRT] = useState(() => {
-    const v = localStorage.getItem("tapflash_brt");
+    const v = localStorage.getItem("reactly_brt");
     return v ? parseInt(v, 10) : null;
   });
 
-  // Progression
   const [levelUpMsg, setLevelUpMsg] = useState(null);
   const [earlyWarning, setEarlyWarning] = useState(false);
-
-  // Share
   const [shareFeedback, setShareFeedback] = useState(null);
 
-  const appearTimeRef = useRef(null);
-  const waitTimerRef = useRef(null);
-  const hideTimerRef = useRef(null);
+  const appearTimeRef   = useRef(null);
+  const waitTimerRef    = useRef(null);
+  const hideTimerRef    = useRef(null);
   const levelUpTimerRef = useRef(null);
-  const areaRef = useRef(null);
+  const areaRef         = useRef(null);
 
   const level = scoreToLevel(score);
 
@@ -196,15 +192,25 @@ export default function TapFlash() {
   }, [clearTimers, spawnShape]);
 
   const handleAreaClick = useCallback(() => {
-    if (gameState !== "waiting") return;
-    clearTimers();
-    playSound("early");
-    setEarlyWarning(true);
-    setTimeout(() => {
-      setEarlyWarning(false);
-      setGameState("waiting");
-      spawnShape(score);
-    }, 900);
+    if (gameState === "active") {
+      // Clicked the background instead of the circle — game over
+      clearTimers();
+      playSound("miss");
+      setGameState("gameover");
+      setLastReaction(null);
+      setIsPerfect(false);
+      return;
+    }
+    if (gameState === "waiting") {
+      clearTimers();
+      playSound("early");
+      setEarlyWarning(true);
+      setTimeout(() => {
+        setEarlyWarning(false);
+        setGameState("waiting");
+        spawnShape(score);
+      }, 900);
+    }
   }, [gameState, clearTimers, score, spawnShape]);
 
   const handleShapeClick = useCallback((e) => {
@@ -215,16 +221,14 @@ export default function TapFlash() {
     const rt = Math.round(performance.now() - appearTimeRef.current);
     const perfect = rt < PERFECT_THRESHOLD;
 
-    setClickedKey(animKey);
     setLastReaction(rt);
     setIsPerfect(perfect);
     playSound(perfect ? "perfect" : "hit");
-
     setReactionTimes((prev) => [...prev, rt]);
 
     if (bestRT === null || rt < bestRT) {
       setBestRT(rt);
-      localStorage.setItem("tapflash_brt", String(rt));
+      localStorage.setItem("reactly_brt", String(rt));
     }
 
     const newScore = score + 1;
@@ -232,10 +236,9 @@ export default function TapFlash() {
 
     if (newScore > highScore) {
       setHighScore(newScore);
-      localStorage.setItem("tapflash_hs", String(newScore));
+      localStorage.setItem("reactly_hs", String(newScore));
     }
 
-    // Level up?
     if (newScore % POINTS_PER_LEVEL === 0) {
       const newLevel = scoreToLevel(newScore);
       clearTimeout(levelUpTimerRef.current);
@@ -246,13 +249,13 @@ export default function TapFlash() {
 
     setGameState("waiting");
     spawnShape(newScore);
-  }, [gameState, clearTimers, animKey, score, highScore, bestRT, spawnShape]);
+  }, [gameState, clearTimers, score, highScore, bestRT, spawnShape]);
 
   const handleShare = useCallback(async () => {
     const avgDisplay = reactionTimes.length > 0
       ? fmt(Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length))
       : "N/A";
-    const text = `I scored ${score} on TapFlash with an avg reaction time of ${avgDisplay}. Can you beat me? 🎯`;
+    const text = `I scored ${score} on Reactly with an avg reaction time of ${avgDisplay}. Can you beat me? 🎯`;
     try {
       await navigator.clipboard.writeText(text);
       setShareFeedback("Copied to clipboard!");
@@ -267,7 +270,6 @@ export default function TapFlash() {
     clearTimeout(levelUpTimerRef.current);
   }, [clearTimers]);
 
-  // Derived stats
   const avgRT = reactionTimes.length > 0
     ? Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length)
     : null;
@@ -278,9 +280,8 @@ export default function TapFlash() {
 
   return (
     <div className="tf-root">
-      {/* ── Header ── */}
       <header className="tf-header">
-        <h1 className="tf-logo">Tap<span>Flash</span></h1>
+        <h1 className="tf-logo">React<span>ly</span></h1>
 
         <div className="tf-header-center">
           {(gameState === "waiting" || gameState === "active") && (
@@ -305,16 +306,13 @@ export default function TapFlash() {
       </header>
 
       <main className="tf-main">
-        {/* ── Level-up toast (outside play area) ── */}
         {levelUpMsg && <LevelUpToast message={levelUpMsg} />}
 
-        {/* ── Play area ── */}
         <div
           ref={areaRef}
           className={`tf-area ${gameState === "idle" || gameState === "gameover" ? "tf-area--dim" : ""}`}
           onClick={handleAreaClick}
         >
-          {/* Idle overlay */}
           {gameState === "idle" && (
             <div className="tf-overlay tf-overlay--fade">
               <div className="tf-idle-icon">🎯</div>
@@ -325,7 +323,6 @@ export default function TapFlash() {
             </div>
           )}
 
-          {/* Game over overlay */}
           {gameState === "gameover" && (
             <div className="tf-overlay tf-overlay--fade tf-gameover">
               <h2 className="tf-go-title">Game Over</h2>
@@ -337,10 +334,10 @@ export default function TapFlash() {
               </div>
 
               <div className="tf-stats-grid">
-                <StatCard label="Avg RT" value={fmt(avgRT)} />
-                <StatCard label="Best RT" value={fmt(sessionBestRT)} accent />
-                <StatCard label="Accuracy" value={accuracy != null ? `${accuracy}%` : "—"} />
-                <StatCard label="Level" value={level} />
+                <StatCard label="Avg RT"    value={fmt(avgRT)} />
+                <StatCard label="Best RT"   value={fmt(sessionBestRT)} accent />
+                <StatCard label="Accuracy"  value={accuracy != null ? `${accuracy}%` : "—"} />
+                <StatCard label="Level"     value={level} />
               </div>
 
               {shareFeedback ? (
@@ -358,16 +355,12 @@ export default function TapFlash() {
             </div>
           )}
 
-          {/* Early warning */}
-          {earlyWarning && (
-            <div className="tf-warning">Too early!</div>
-          )}
+          {earlyWarning && <div className="tf-warning">Too early!</div>}
 
-          {/* Shape */}
           {gameState === "active" && (
             <div
               key={animKey}
-              className={`tf-shape ${clickedKey === animKey ? "tf-shape--clicked" : ""}`}
+              className="tf-shape"
               onClick={handleShapeClick}
               style={{
                 left: position.x,
@@ -379,7 +372,6 @@ export default function TapFlash() {
             />
           )}
 
-          {/* Reaction badge */}
           {lastReaction !== null && gameState === "waiting" && (
             <div className={`tf-rt-badge ${isPerfect ? "tf-rt-badge--perfect" : ""}`}>
               {isPerfect && <span className="tf-perfect-label">PERFECT </span>}
@@ -388,7 +380,6 @@ export default function TapFlash() {
           )}
         </div>
 
-        {/* Status hint */}
         <p className="tf-hint">
           {gameState === "waiting" && "Get ready…"}
           {gameState === "active" && "Click it!"}

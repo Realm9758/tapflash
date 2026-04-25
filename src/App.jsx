@@ -1,5 +1,5 @@
-import TapFlash from "./components/TapFlash";
+import Reactly from "./components/TapFlash";
 
 export default function App() {
-  return <TapFlash />;
+  return <Reactly />;
 }
