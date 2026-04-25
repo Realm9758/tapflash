@@ -150,9 +150,7 @@
     0 12px 48px rgba(0, 0, 0, 0.6),
     0 0 100px rgba(124, 106, 244, 0.12);
 }
-.tf-area--dim {
-  opacity: 0.45;
-}
+/* overlay covers the area completely — no opacity needed */
 
 /* ── Overlay ── */
 .tf-overlay {
@@ -163,7 +161,8 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background: rgba(18, 16, 34, 0.97);
+  background: #1a1830;
+  border: 1px solid rgba(124, 106, 244, 0.18);
   border-radius: 22px;
   z-index: 10;
 }
