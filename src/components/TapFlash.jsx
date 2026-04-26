@@ -314,8 +314,16 @@ export default function Reactly() {
       appearTimeRef.current = performance.now();
 
       hideTimerRef.current = setTimeout(() => {
-        showFeedback({ text: "MISS!", kind: "miss" });
-        handlePenalty("miss");
+        const allBad = newCircles.every(c => c.type === "bad");
+        if (allBad) {
+          showFeedback({ text: "DODGED!", kind: "fast-rt" });
+          setGamePhase("waiting");
+          setCircles([]);
+          spawnRef.current?.(curScore, G.current.mode);
+        } else {
+          showFeedback({ text: "MISS!", kind: "miss" });
+          handlePenalty("miss");
+        }
       }, effectiveVisible);
     }, delay);
   }, [buildCircles, handlePenalty, showFeedback]);
